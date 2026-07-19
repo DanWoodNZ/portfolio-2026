@@ -11,6 +11,7 @@ import DvdGlobe from "@/components/DvdGlobe";
 import ProjectGrid from "@/components/ProjectGrid";
 import CareerFeed from "@/components/CareerFeed";
 import HistoryCard from "@/components/HistoryCard";
+import ScrollFadeIn from "@/components/ScrollFadeIn";
 import { CMSProject } from "@/lib/cms";
 import { CareerItem } from "@/data/projects";
 
@@ -49,7 +50,12 @@ export default function HomeContent({ projects, career, education }: HomeContent
             {/* Single Grid Container for all 3 Rows: 3 cols at lg (desktop >=1024px), 2 cols at sm (tablet), 1 col on mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {/* Card 1: About Bio */}
-              <div className="bg-black border border-white/12 rounded-[12px] p-6 flex flex-col justify-between h-[360px] sm:h-[340px] lg:h-[calc((100svh-88px)/2)] lg:min-h-[360px] relative overflow-hidden group">
+              <motion.div
+                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                className="bg-black border border-white/12 rounded-[12px] p-6 flex flex-col justify-between h-[360px] sm:h-[340px] lg:h-[calc((100svh-88px)/2)] lg:min-h-[360px] relative overflow-hidden group"
+              >
                 <DvdGlobe />
 
                 {/* Bio Text */}
@@ -71,20 +77,20 @@ export default function HomeContent({ projects, career, education }: HomeContent
                     with AI tooling.
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Project Cards (All projects use identical style and layout, limited to 5, connected to live Supabase/CMS) */}
               <ProjectGrid initialProjects={projects} />
 
               {/* Row 3: Career Table (2 cols on desktop) & History (1 col on desktop) */}
-              <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+              <ScrollFadeIn className="col-span-1 sm:col-span-2 lg:col-span-2">
                 <CareerFeed initialCareer={career} initialEducation={education} />
-              </div>
+              </ScrollFadeIn>
 
               {/* Right History Card with Interactive Floating Polaroid Stack */}
-              <div className="h-full">
+              <ScrollFadeIn delay={0.15} className="h-full">
                 <HistoryCard />
-              </div>
+              </ScrollFadeIn>
             </div>
           </motion.main>
         )}

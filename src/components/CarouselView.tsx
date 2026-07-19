@@ -8,6 +8,7 @@ import { Lock, GraduationCap, AtSign } from "lucide-react";
 import { CMSProject, isVideoUrl, getHistoryPhotos, HistoryPhotoItem, getProjects, isProjectUnlocked } from "@/lib/cms";
 import { CareerItem, INITIAL_HISTORY_PHOTOS } from "@/data/projects";
 import ProjectUnlockModal from "@/components/ProjectUnlockModal";
+import ScrollFadeIn from "@/components/ScrollFadeIn";
 
 interface CarouselViewProps {
   projects: CMSProject[];
@@ -138,8 +139,13 @@ export default function CarouselView({ projects, career, education }: CarouselVi
         )}
       </AnimatePresence>
 
-      {/* Hero Header for Carousel View */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center mb-20 md:mb-32">
+      {/* Hero Header for Carousel View - Animates first */}
+      <motion.div
+        initial={{ opacity: 0, y: 28, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-[1400px] mx-auto px-6 md:px-12 text-center mb-20 md:mb-32"
+      >
         <h1 className="text-center flex flex-col items-center justify-center max-w-[1100px] mx-auto select-none font-sans">
           {/* First line: "Dan is a product designer" */}
           <div className="flex flex-wrap items-baseline justify-center gap-x-3 sm:gap-x-4 md:gap-x-5 leading-[0.95]">
@@ -172,9 +178,9 @@ export default function CarouselView({ projects, career, education }: CarouselVi
             </span>
           </div>
         </h1>
-      </div>
+      </motion.div>
 
-      {/* Tilted Infinite Projects Scroller (Spills over edge) */}
+      {/* Tilted Infinite Projects Scroller - Animates one at a time sliding/fading from right after text */}
       <div className="w-full py-10 my-8 mb-16 md:mb-24 cursor-grab active:cursor-grabbing overflow-visible select-none">
         <motion.div
           style={{ x }}
@@ -200,8 +206,15 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           className="flex items-center pl-[80px]"
         >
           {loopedProjects.map((project, idx) => (
-            <div
+            <motion.div
               key={`${project.slug}-${idx}`}
+              initial={{ opacity: 0, x: 90, filter: "blur(12px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              transition={{
+                duration: 0.8,
+                delay: 0.35 + Math.min(idx, 6) * 0.14,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               onMouseEnter={() => {
                 setHoveredTitle({ title: project.title, is_locked: project.is_locked });
               }}
@@ -252,7 +265,7 @@ export default function CarouselView({ projects, career, education }: CarouselVi
                   />
                 )}
               </Link>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
@@ -260,7 +273,7 @@ export default function CarouselView({ projects, career, education }: CarouselVi
       {/* Split Bio & History Section */}
       <div className="w-full px-[80px] max-w-[1400px] mx-auto mt-40 md:mt-48 mb-32 space-y-40">
         {/* Top Row: Work + Photos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <ScrollFadeIn className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="max-w-[560px]">
             <span className="text-[#E5FE8D] font-mono text-[13px] uppercase tracking-widest block mb-4">
               WORK
@@ -290,10 +303,10 @@ export default function CarouselView({ projects, career, education }: CarouselVi
               <img src={p1.src} alt={p1.alt} className="w-full h-full object-cover" />
             </div>
           </div>
-        </div>
+        </ScrollFadeIn>
 
         {/* Bottom Row: Photos + Life */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <ScrollFadeIn delay={0.15} className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative flex items-center justify-center lg:justify-start min-h-[320px] sm:min-h-[380px] order-2 lg:order-1 pt-4">
             <div className="w-[280px] sm:w-[340px] aspect-[4/3] rounded-[16px] overflow-hidden bg-black border-4 border-white shadow-2xl transform rotate-[6deg] absolute left-4 sm:left-8 top-0 z-10">
               <img src={p2.src} alt={p2.alt} className="w-full h-full object-cover" />
@@ -314,14 +327,14 @@ export default function CarouselView({ projects, career, education }: CarouselVi
               I&apos;m a dual citizen of New Zealand and the US and have spent most of my life between both. Today, I live in Hoboken with my wife Paige, our daughter Elva, and our dog Archie. Outside of work, i&apos;m into photography, film & enjoy the occasional round of tennis.
             </p>
           </div>
-        </div>
+        </ScrollFadeIn>
       </div>
 
       {/* Split Career & Education Columns */}
       <div className="w-full px-[80px] max-w-[1400px] mx-auto mb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Background Column */}
-          <div>
+          <ScrollFadeIn>
             <span className="text-[#E5FE8D] font-mono text-[13px] uppercase tracking-widest block mb-4">
               BACKGROUND
             </span>
@@ -342,10 +355,10 @@ export default function CarouselView({ projects, career, education }: CarouselVi
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollFadeIn>
 
           {/* Education Column */}
-          <div>
+          <ScrollFadeIn delay={0.15}>
             <span className="text-[#E5FE8D] font-mono text-[13px] uppercase tracking-widest block mb-4">
               EDUCATION
             </span>
@@ -366,7 +379,7 @@ export default function CarouselView({ projects, career, education }: CarouselVi
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollFadeIn>
         </div>
       </div>
 

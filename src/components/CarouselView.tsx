@@ -118,24 +118,28 @@ export default function CarouselView({ projects, career, education }: CarouselVi
       {/* Floating Hover Project Title Cursor Badge */}
       <AnimatePresence>
         {hoveredTitle && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+          <div
             style={{
               position: "fixed",
-              left: mousePos.x,
-              top: mousePos.y,
-              transform: "translate(-50%, -130%)",
+              left: mousePos.x + 14,
+              top: mousePos.y + 14,
+              pointerEvents: "none",
+              zIndex: 9999,
             }}
-            className="pointer-events-none z-50 px-4 py-2 rounded-full bg-black/90 border border-white/20 text-white font-mono text-[12px] font-medium tracking-wide uppercase shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md whitespace-nowrap flex items-center gap-1.5"
           >
-            {hoveredTitle.is_locked && (
-              <Lock size={13} className="text-[#E5FE8D] shrink-0" />
-            )}
-            <span>{hoveredTitle.title}</span>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="px-4 py-2 rounded-full bg-black/90 border border-white/20 text-white font-mono text-[12px] font-medium tracking-wide uppercase shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-md whitespace-nowrap flex items-center gap-1.5"
+            >
+              {hoveredTitle.is_locked && (
+                <Lock size={13} className="text-[#E5FE8D] shrink-0" />
+              )}
+              <span>{hoveredTitle.title}</span>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -206,15 +210,8 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           className="flex items-center pl-[80px]"
         >
           {loopedProjects.map((project, idx) => (
-            <motion.div
+            <div
               key={`${project.slug}-${idx}`}
-              initial={{ opacity: 0, x: 90, filter: "blur(12px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              transition={{
-                duration: 0.8,
-                delay: 0.35 + Math.min(idx, 6) * 0.14,
-                ease: [0.16, 1, 0.3, 1],
-              }}
               onMouseEnter={() => {
                 setHoveredTitle({ title: project.title, is_locked: project.is_locked });
               }}
@@ -224,48 +221,59 @@ export default function CarouselView({ projects, career, education }: CarouselVi
               className="w-[750px] shrink-0 mr-[20px] py-6"
               style={{ transform: "rotate(-8deg)" }}
             >
-              <Link
-                href={`/projects/${project.slug}`}
-                draggable={false}
-                onClick={(e) => {
-                  const dist = Math.hypot(
-                    e.clientX - pointerStartX.current,
-                    e.clientY - pointerStartY.current
-                  );
-                  if (hasDragged.current || dist > 6) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                  }
-                  if (project.is_locked && !isProjectUnlocked(project.slug)) {
-                    e.preventDefault();
-                    setUnlockModalProject(project);
-                  }
+              <motion.div
+                initial={{ opacity: 0, x: 90, filter: "blur(12px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.35 + Math.min(idx, 6) * 0.14,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
-                className="block w-full rounded-[20px] overflow-hidden bg-[#121212] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-300 hover:scale-[1.02] relative aspect-[4/3]"
+                className="w-full"
               >
-                {isVideoUrl(project.thumbnail) ? (
-                  <video
-                    src={project.thumbnail}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    draggable={false}
-                    onDragStart={(e) => e.preventDefault()}
-                    className="w-full h-full object-cover pointer-events-none block select-none"
-                  />
-                ) : (
-                  <img
-                    src={project.thumbnail || "/assets/misc/placeholder.jpg"}
-                    alt={project.title}
-                    draggable={false}
-                    onDragStart={(e) => e.preventDefault()}
-                    className="w-full h-full object-cover pointer-events-none block select-none"
-                  />
-                )}
-              </Link>
-            </motion.div>
+                <Link
+                  href={`/projects/${project.slug}`}
+                  draggable={false}
+                  onClick={(e) => {
+                    const dist = Math.hypot(
+                      e.clientX - pointerStartX.current,
+                      e.clientY - pointerStartY.current
+                    );
+                    if (hasDragged.current || dist > 6) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    if (project.is_locked && !isProjectUnlocked(project.slug)) {
+                      e.preventDefault();
+                      setUnlockModalProject(project);
+                    }
+                  }}
+                  className="block w-full rounded-[20px] overflow-hidden bg-[#121212] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-300 hover:scale-[1.02] relative aspect-[4/3]"
+                >
+                  {isVideoUrl(project.thumbnail) ? (
+                    <video
+                      src={project.thumbnail}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      className="w-full h-full object-cover pointer-events-none block select-none"
+                    />
+                  ) : (
+                    <img
+                      src={project.thumbnail || "/assets/misc/placeholder.jpg"}
+                      alt={project.title}
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      className="w-full h-full object-cover pointer-events-none block select-none"
+                    />
+                  )}
+                </Link>
+              </motion.div>
+            </div>
           ))}
         </motion.div>
       </div>

@@ -10,12 +10,12 @@ interface ViewModeContextType {
 }
 
 const ViewModeContext = createContext<ViewModeContextType>({
-  viewMode: "grid",
+  viewMode: "carousel",
   setViewMode: () => {},
 });
 
 export const ViewModeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [viewMode, setViewModeState] = useState<ViewMode>("grid");
+  const [viewMode, setViewModeState] = useState<ViewMode>("carousel");
 
   useEffect(() => {
     const handleResize = () => {

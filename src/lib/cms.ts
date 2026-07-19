@@ -215,9 +215,15 @@ export async function getProjects(): Promise<CMSProject[]> {
           } catch (e) {}
         }
         return normalized;
+      } else if (error) {
+        console.error("Supabase getProjects error (RLS or connection issue):", error.message || error);
       }
     } catch (e) {
-      console.warn("Supabase fetch failed, returning local/static fallback.", e);
+      console.warn("Supabase fetch exception, returning local/static fallback.", e);
+    }
+  } else {
+    if (typeof window !== "undefined") {
+      console.warn("Supabase is not configured. Using local fallback. Ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in Cloudflare Environment Variables.");
     }
   }
   return getInitialProjects();

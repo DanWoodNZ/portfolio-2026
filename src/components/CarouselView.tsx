@@ -28,11 +28,13 @@ export default function CarouselView({ projects, career, education }: CarouselVi
   const [hoveredTitle, setHoveredTitle] = useState<{ title: string; is_locked?: boolean } | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isMediaReady, setIsMediaReady] = useState(false);
+  const loadedMediaSlugs = useRef<Set<string>>(new Set());
+  const hasInitializedLoop = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsMediaReady(true);
-    }, 800);
+    }, 3500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -90,10 +92,12 @@ export default function CarouselView({ projects, career, education }: CarouselVi
     return [...base, ...base, ...base, ...base, ...base, ...base, ...base, ...base];
   }, [projectsList, projects]);
 
-  const loopWidth = projectsList.length * 770;
+  const baseCount = projectsList.length || projects.length || 5;
+  const loopWidth = baseCount * 770;
 
   useEffect(() => {
-    if (loopWidth > 0 && x.get() === 0) {
+    if (loopWidth > 0 && !hasInitializedLoop.current) {
+      hasInitializedLoop.current = true;
       x.set(-loopWidth * 3);
     }
   }, [loopWidth, x]);
@@ -226,64 +230,74 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           onPointerLeave={() => setIsDragging(false)}
           className="flex items-center pl-[80px]"
         >
-          {loopedProjects.map((project, idx) => (
-            <div
-              key={`${project.slug}-${idx}`}
-              onMouseEnter={() => {
-                setHoveredTitle({ title: project.title, is_locked: project.is_locked });
-              }}
-              onMouseLeave={() => {
-                setHoveredTitle(null);
-              }}
-              className="w-[750px] shrink-0 mr-[20px] py-6"
-              style={{ transform: "rotate(-8deg)" }}
-            >
-              <Link
-                href={`/projects/${project.slug}`}
-                draggable={false}
-                onClick={(e) => {
-                  const dist = Math.hypot(
-                    e.clientX - pointerStartX.current,
-                    e.clientY - pointerStartY.current
-                  );
-                  if (hasDragged.current || dist > 6) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                  }
-                  if (project.is_locked && !isProjectUnlocked(project.slug)) {
-                    e.preventDefault();
-                    setUnlockModalProject(project);
-                  }
+          {loopedProjects.map((project, idx) => {
+            const handleMediaReady = () => {
+              loadedMediaSlugs.current.add(project.slug);
+              const totalUnique = projectsList.length || projects.length || 1;
+              if (loadedMediaSlugs.current.size >= totalUnique) {
+                setIsMediaReady(true);
+              }
+            };
+
+            return (
+              <div
+                key={`${project.slug}-${idx}`}
+                onMouseEnter={() => {
+                  setHoveredTitle({ title: project.title, is_locked: project.is_locked });
                 }}
-                className="block w-full rounded-[20px] overflow-hidden bg-[#121212] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-300 hover:scale-[1.02] relative aspect-[4/3]"
+                onMouseLeave={() => {
+                  setHoveredTitle(null);
+                }}
+                className="w-[750px] shrink-0 mr-[20px] py-6"
+                style={{ transform: "rotate(-8deg)" }}
               >
-                {isVideoUrl(project.thumbnail) ? (
-                  <video
-                    src={project.thumbnail}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    draggable={false}
-                    onDragStart={(e) => e.preventDefault()}
-                    onLoadedData={() => setIsMediaReady(true)}
-                    onPlaying={() => setIsMediaReady(true)}
-                    className="w-full h-full object-cover pointer-events-none block select-none"
-                  />
-                ) : (
-                  <img
-                    src={project.thumbnail || "/assets/misc/placeholder.jpg"}
-                    alt={project.title}
-                    draggable={false}
-                    onDragStart={(e) => e.preventDefault()}
-                    onLoad={() => setIsMediaReady(true)}
-                    className="w-full h-full object-cover pointer-events-none block select-none"
-                  />
-                )}
-              </Link>
-            </div>
-          ))}
+                <Link
+                  href={`/projects/${project.slug}`}
+                  draggable={false}
+                  onClick={(e) => {
+                    const dist = Math.hypot(
+                      e.clientX - pointerStartX.current,
+                      e.clientY - pointerStartY.current
+                    );
+                    if (hasDragged.current || dist > 6) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    if (project.is_locked && !isProjectUnlocked(project.slug)) {
+                      e.preventDefault();
+                      setUnlockModalProject(project);
+                    }
+                  }}
+                  className="block w-full rounded-[20px] overflow-hidden bg-[#121212] shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-300 hover:scale-[1.02] relative aspect-[4/3]"
+                >
+                  {isVideoUrl(project.thumbnail) ? (
+                    <video
+                      src={project.thumbnail}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      onLoadedData={handleMediaReady}
+                      onPlaying={handleMediaReady}
+                      className="w-full h-full object-cover pointer-events-none block select-none"
+                    />
+                  ) : (
+                    <img
+                      src={project.thumbnail || "/assets/misc/placeholder.jpg"}
+                      alt={project.title}
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      onLoad={handleMediaReady}
+                      className="w-full h-full object-cover pointer-events-none block select-none"
+                    />
+                  )}
+                </Link>
+              </div>
+            );
+          })}
         </motion.div>
       </motion.div>
 

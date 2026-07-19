@@ -166,14 +166,14 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           {/* First line: "Dan is a product designer" */}
           <div className="flex flex-wrap items-baseline justify-center gap-x-3 sm:gap-x-4 md:gap-x-5 leading-[0.95]">
             <span
-              style={{ fontFamily: "var(--font-manrope), var(--font-sans)" }}
-              className="font-[800] text-[44px] sm:text-[64px] md:text-[78px] lg:text-[88px] tracking-tight text-white"
+              style={{ fontFamily: "var(--font-manrope), var(--font-sans)", letterSpacing: "-3px" }}
+              className="font-[800] text-[44px] sm:text-[64px] md:text-[78px] lg:text-[88px] text-white"
             >
               Dan is a
             </span>
             <span
-              style={{ fontFamily: "var(--font-unifraktur), serif" }}
-              className="font-normal text-[50px] sm:text-[72px] md:text-[88px] lg:text-[98px] tracking-normal text-white"
+              style={{ fontFamily: "var(--font-unifraktur), serif", letterSpacing: "-3px" }}
+              className="font-normal text-[50px] sm:text-[72px] md:text-[88px] lg:text-[98px] text-white"
             >
               product designer
             </span>
@@ -181,14 +181,14 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           {/* Second line: "based in New York." */}
           <div className="flex flex-wrap items-baseline justify-center gap-x-3 sm:gap-x-4 md:gap-x-5 leading-[0.95] mt-2 sm:mt-3 md:mt-4">
             <span
-              style={{ fontFamily: "var(--font-pinyon), cursive" }}
-              className="font-normal text-[46px] sm:text-[68px] md:text-[84px] lg:text-[94px] text-white tracking-normal"
+              style={{ fontFamily: "var(--font-pinyon), cursive", letterSpacing: "-3px" }}
+              className="font-normal text-[46px] sm:text-[68px] md:text-[84px] lg:text-[94px] text-white"
             >
               based in
             </span>
             <span
-              style={{ fontFamily: "'Sfizia Bold', var(--font-manrope), sans-serif" }}
-              className="font-bold text-[46px] sm:text-[66px] md:text-[80px] lg:text-[90px] text-white tracking-tight"
+              style={{ fontFamily: "'Sfizia Bold', var(--font-manrope), sans-serif", letterSpacing: "-3px" }}
+              className="font-bold text-[46px] sm:text-[66px] md:text-[80px] lg:text-[90px] text-white"
             >
               New York.
             </span>

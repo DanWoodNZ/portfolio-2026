@@ -209,28 +209,31 @@ export default function CarouselView({ projects, career, education }: CarouselVi
           onPointerLeave={() => setIsDragging(false)}
           className="flex items-center pl-[80px]"
         >
-          {loopedProjects.map((project, idx) => (
-            <div
-              key={`${project.slug}-${idx}`}
-              onMouseEnter={() => {
-                setHoveredTitle({ title: project.title, is_locked: project.is_locked });
-              }}
-              onMouseLeave={() => {
-                setHoveredTitle(null);
-              }}
-              className="w-[750px] shrink-0 mr-[20px] py-6"
-              style={{ transform: "rotate(-8deg)" }}
-            >
-              <motion.div
-                initial={{ opacity: 0, x: 90, filter: "blur(12px)" }}
-                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.35 + Math.min(idx, 6) * 0.14,
-                  ease: [0.16, 1, 0.3, 1],
+          {loopedProjects.map((project, idx) => {
+            const baseCount = projectsList.length || projects.length || 1;
+            const posInLoop = idx % baseCount;
+            return (
+              <div
+                key={`${project.slug}-${idx}`}
+                onMouseEnter={() => {
+                  setHoveredTitle({ title: project.title, is_locked: project.is_locked });
                 }}
-                className="w-full"
+                onMouseLeave={() => {
+                  setHoveredTitle(null);
+                }}
+                className="w-[750px] shrink-0 mr-[20px] py-6"
+                style={{ transform: "rotate(-8deg)" }}
               >
+                <motion.div
+                  initial={{ opacity: 0, x: 120, filter: "blur(14px)" }}
+                  animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                  transition={{
+                    duration: 0.9,
+                    delay: 0.3 + posInLoop * 0.16,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="w-full"
+                >
                 <Link
                   href={`/projects/${project.slug}`}
                   draggable={false}
@@ -274,7 +277,8 @@ export default function CarouselView({ projects, career, education }: CarouselVi
                 </Link>
               </motion.div>
             </div>
-          ))}
+          );
+        })}
         </motion.div>
       </div>
 

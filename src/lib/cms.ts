@@ -316,19 +316,27 @@ export async function createProject(project: Partial<CMSProject>): Promise<{ suc
 export async function updateProject(id: string, updates: Partial<CMSProject>): Promise<{ success: boolean; error?: string; warning?: string }> {
   if (isSupabaseConfigured()) {
     try {
-      let { error } = await supabase.from("projects").update(updates).eq("id", id);
+      let { data, error } = await supabase.from("projects").update(updates).eq("id", id).select();
       let warning: string | undefined;
 
       if (error && (error.message?.includes("is_locked") || error.message?.includes("password") || error.message?.includes("schema cache") || error.message?.includes("column"))) {
         const { is_locked, password, ...safeUpdates } = updates;
-        const retry = await supabase.from("projects").update(safeUpdates).eq("id", id);
+        const retry = await supabase.from("projects").update(safeUpdates).eq("id", id).select();
         if (retry.error) {
           return { success: false, error: retry.error.message };
         }
+        data = retry.data;
         error = null;
         warning = "Project details saved, but lock settings couldn't be saved because 'is_locked'/'password' columns are missing in Supabase DB. Run ALTER TABLE in supabase_schema.sql.";
       } else if (error) {
         return { success: false, error: error.message };
+      }
+
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        return {
+          success: false,
+          error: "0 rows updated in Supabase DB. This usually happens because Row Level Security (RLS) policies are blocking your update (e.g., if you logged in via 4-digit PIN while Supabase requires an 'authenticated' session). Please run supabase_rls_fix.sql in your Supabase SQL Editor, or log in using your Supabase username/password."
+        };
       }
 
       // Also update local cache
@@ -365,8 +373,14 @@ export async function updateProject(id: string, updates: Partial<CMSProject>): P
 export async function deleteProject(id: string): Promise<{ success: boolean; error?: string }> {
   if (isSupabaseConfigured()) {
     try {
-      const { error } = await supabase.from("projects").delete().eq("id", id);
+      const { data, error } = await supabase.from("projects").delete().eq("id", id).select();
       if (error) return { success: false, error: error.message };
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        return {
+          success: false,
+          error: "Could not delete: Row Level Security (RLS) blocked the delete operation. Run supabase_rls_fix.sql in your Supabase SQL Editor."
+        };
+      }
       if (typeof window !== "undefined") {
         try {
           const current = await getProjects();
@@ -402,7 +416,14 @@ export async function saveProjectsOrder(projects: CMSProject[]): Promise<{ succe
   if (isSupabaseConfigured()) {
     try {
       for (const p of reordered) {
-        await supabase.from("projects").update({ order_index: p.order_index }).eq("id", p.id);
+        const { data, error } = await supabase.from("projects").update({ order_index: p.order_index }).eq("id", p.id).select();
+        if (error) return { success: false, error: error.message };
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          return {
+            success: false,
+            error: "Order saving failed: Row Level Security (RLS) blocked updates. Run supabase_rls_fix.sql in your Supabase SQL Editor."
+          };
+        }
       }
       if (typeof window !== "undefined") {
         try { localStorage.setItem("cms_local_projects_override", JSON.stringify(reordered)); } catch (e) {}

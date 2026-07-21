@@ -82,17 +82,17 @@ CREATE POLICY "Allow public read access on career_items" ON public.career_items 
 DROP POLICY IF EXISTS "Allow public read access on education_items" ON public.education_items;
 CREATE POLICY "Allow public read access on education_items" ON public.education_items FOR SELECT USING (true);
 
--- 8. Create Authenticated Admin CRUD Policies
+-- 8. Create Authenticated & PIN Admin CRUD Policies
 DROP POLICY IF EXISTS "Allow admin full access on projects" ON public.projects;
-CREATE POLICY "Allow admin full access on projects" ON public.projects FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow admin full access on projects" ON public.projects FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "Allow admin full access on visual_feed" ON public.visual_feed;
-CREATE POLICY "Allow admin full access on visual_feed" ON public.visual_feed FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow admin full access on visual_feed" ON public.visual_feed FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "Allow admin full access on history_photos" ON public.history_photos;
-CREATE POLICY "Allow admin full access on history_photos" ON public.history_photos FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow admin full access on history_photos" ON public.history_photos FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "Allow admin full access on career_items" ON public.career_items;
-CREATE POLICY "Allow admin full access on career_items" ON public.career_items FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow admin full access on career_items" ON public.career_items FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "Allow admin full access on education_items" ON public.education_items;
-CREATE POLICY "Allow admin full access on education_items" ON public.education_items FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Allow admin full access on education_items" ON public.education_items FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 
 -- 9. Insert initial seed projects
 INSERT INTO public.projects (slug, title, description, role, year, order_index, highlights, thumbnail, sections, media_gallery)

@@ -72,7 +72,7 @@ export default function ProjectGrid({ initialProjects }: ProjectGridProps) {
             className="group rounded-[12px] bg-black overflow-hidden relative flex flex-col md:block h-full transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] border border-white/10 md:border-0"
           >
             {/* Project Thumbnail Image or Video */}
-            <div className="w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:absolute md:inset-0 bg-[#121212] overflow-hidden relative shrink-0">
+            <div className="w-full aspect-[4/3] md:aspect-auto md:absolute md:inset-0 bg-[#121212] overflow-hidden relative shrink-0 rounded-b-[12px] md:rounded-b-none border-b border-white/10 md:border-b-0">
               {isVideoUrl(project.thumbnail) ? (
                 <video
                   src={project.thumbnail}
@@ -95,16 +95,14 @@ export default function ProjectGrid({ initialProjects }: ProjectGridProps) {
             <div className="p-4 sm:p-5 md:p-6 flex flex-col justify-end bg-black md:bg-transparent md:bg-gradient-to-t md:from-black/85 md:via-black/40 md:to-transparent md:absolute md:inset-x-0 md:bottom-0 md:transform md:translate-y-full md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-200 ease-out md:pt-16 z-10">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-col gap-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    {project.role && (
-                      <span className="text-[10px] sm:text-[11px] font-mono text-[#E5FE8D] uppercase tracking-wider font-semibold truncate">
-                        {project.role}
+                  {project.is_locked && (
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <Lock size={12} className="text-[#E5FE8D] shrink-0" />
+                      <span className="text-[10px] sm:text-[11px] font-mono text-[#E5FE8D] uppercase tracking-wider font-semibold">
+                        Locked
                       </span>
-                    )}
-                    {project.is_locked && (
-                      <Lock size={11} className="text-[#E5FE8D] shrink-0" />
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <span className="font-medium text-white truncate text-[14px] sm:text-[15px]">{project.title}</span>
                 </div>
                 <div className="w-10 h-10 rounded-[8px] text-white flex items-center justify-center shrink-0 shadow-lg group-hover:bg-[#252525] group-hover:scale-105 transition-all duration-200">

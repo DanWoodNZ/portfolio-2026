@@ -38,12 +38,26 @@ export interface VisualFeedItem {
   order_index: number;
 }
 
-// Normalize image paths so broken placeholders fall back to the misc placeholder
+// Custom CDN Base URL configuration for direct media fetching (bypassing server-side API proxy routes)
+export const CDN_BASE_URL = (
+  process.env.NEXT_PUBLIC_CDN_URL ||
+  process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
+  process.env.R2_PUBLIC_URL ||
+  "https://cdn.danrwood.com"
+).replace(/\/$/, "");
+
+// Normalize image and video paths so relative keys append directly to CDN base URL
 const normalizeImage = (src?: string) => {
   if (!src || src.startsWith("/assets/projects/")) {
     return "/assets/misc/placeholder.jpg";
   }
-  return src;
+  // If absolute URL, local static asset, or data/blob URI, return directly
+  if (src.match(/^(http:\/\/|https:\/\/|data:|blob:)/i) || src.startsWith("/assets/")) {
+    return src;
+  }
+  // Otherwise, append relative media file path/key directly to custom CDN base URL
+  const cleanPath = src.replace(/^\/+/, "");
+  return `${CDN_BASE_URL}/${cleanPath}`;
 };
 
 export const isVideoUrl = (src?: string) => {
@@ -75,7 +89,7 @@ export async function uploadToR2(file: File): Promise<{ url: string; type: "imag
   }
 
   const data = await res.json();
-  return { url: data.url, type: data.type };
+  return { url: normalizeImage(data.url), type: data.type };
 }
 
 // --- Live Cross-Tab Reactivity Helper ---

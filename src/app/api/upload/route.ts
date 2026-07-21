@@ -12,7 +12,12 @@ export async function POST(request: Request) {
     }
 
     const bucketName = process.env.R2_BUCKET_NAME || "portfolio-media";
-    const publicUrl = (process.env.R2_PUBLIC_URL || "").replace(/\/$/, "");
+    const publicUrl = (
+      process.env.NEXT_PUBLIC_CDN_URL ||
+      process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
+      process.env.R2_PUBLIC_URL ||
+      ""
+    ).replace(/\/$/, "");
 
     // Determine media type
     const contentType = file.type || "application/octet-stream";

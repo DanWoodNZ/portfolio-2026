@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X, Maximize, ChevronLeft, ChevronRight } from "lucide-react";
 import { getVisualFeedItems } from "@/lib/cms";
+import SafariVideo from "@/components/SafariVideo";
 
 export interface FeedItem {
   id: string;
@@ -156,12 +157,8 @@ export default function MasonryFeed({ className }: { className?: string } = {}) 
         className="group block w-full rounded-[12px] border border-white/12 overflow-hidden relative cursor-pointer shadow-lg bg-[#141414] h-auto"
       >
         {isVideo(item.src) ? (
-          <video
+          <SafariVideo
             src={item.src}
-            autoPlay
-            loop
-            muted
-            playsInline
             className="w-full h-auto block transition-transform duration-700 ease-out group-hover:scale-105"
           />
         ) : (
@@ -274,12 +271,8 @@ export default function MasonryFeed({ className }: { className?: string } = {}) 
               className="relative flex items-center justify-center max-w-full max-h-[85vh]"
             >
               {isVideo(currentItem.src) ? (
-                <video
+                <SafariVideo
                   src={currentItem.src}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
                   onClick={(e) => {
                     e.stopPropagation();
                     const v = e.currentTarget;

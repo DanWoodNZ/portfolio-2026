@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Lock } from "lucide-react";
 import { getProjects, CMSProject, isVideoUrl, isProjectUnlocked } from "@/lib/cms";
 import ProjectUnlockModal from "@/components/ProjectUnlockModal";
+import SafariVideo from "@/components/SafariVideo";
 
 interface ProjectGridProps {
   initialProjects: CMSProject[];
@@ -74,12 +75,8 @@ export default function ProjectGrid({ initialProjects }: ProjectGridProps) {
             {/* Project Thumbnail Image or Video */}
             <div className="w-full aspect-[4/3] md:aspect-auto md:absolute md:inset-0 bg-[#121212] overflow-hidden relative shrink-0 rounded-b-[12px] md:rounded-b-none border-b border-white/10 md:border-b-0">
               {isVideoUrl(project.thumbnail) ? (
-                <video
+                <SafariVideo
                   src={project.thumbnail}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
                   className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
               ) : (

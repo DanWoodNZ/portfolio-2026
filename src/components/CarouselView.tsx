@@ -9,6 +9,7 @@ import { CMSProject, isVideoUrl, getHistoryPhotos, HistoryPhotoItem, getProjects
 import { CareerItem, INITIAL_HISTORY_PHOTOS } from "@/data/projects";
 import ProjectUnlockModal from "@/components/ProjectUnlockModal";
 import ScrollFadeIn from "@/components/ScrollFadeIn";
+import SafariVideo from "@/components/SafariVideo";
 
 interface CarouselViewProps {
   projects: CMSProject[];
@@ -272,12 +273,8 @@ export default function CarouselView({ projects, career, education }: CarouselVi
                   className="block w-full rounded-[20px] overflow-hidden bg-[#121212] shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-300 hover:scale-[1.02] relative aspect-[4/3]"
                 >
                   {isVideoUrl(project.thumbnail) ? (
-                    <video
+                    <SafariVideo
                       src={project.thumbnail}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
                       draggable={false}
                       onDragStart={(e) => e.preventDefault()}
                       onLoadedData={handleMediaReady}

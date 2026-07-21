@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
 import { getProjectBySlug, getProjects, CMSProject, isVideoUrl, isProjectUnlocked } from "@/lib/cms";
 import ProjectUnlockModal from "@/components/ProjectUnlockModal";
+import SafariVideo from "@/components/SafariVideo";
 
 export default function ProjectDetailPage({
   params,
@@ -217,12 +218,8 @@ export default function ProjectDetailPage({
           >
             <div className="w-full rounded-[12px] overflow-hidden bg-[#121212] border border-white/12 shadow-2xl relative">
               {isVideoUrl(project.thumbnail) ? (
-                <video
+                <SafariVideo
                   src={project.thumbnail}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
                   className="w-full h-auto block"
                 />
               ) : (
@@ -252,12 +249,8 @@ export default function ProjectDetailPage({
                     {sec.image1.src ? (
                       <div className="w-full rounded-[12px] overflow-hidden group relative">
                         {isVideoUrl(sec.image1.src) ? (
-                          <video
+                          <SafariVideo
                             src={sec.image1.src}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
                             className="w-full h-auto block"
                           />
                         ) : (
@@ -313,12 +306,8 @@ export default function ProjectDetailPage({
                       {sec.image1?.src ? (
                         <div className="w-full rounded-[12px] overflow-hidden bg-[#121212] relative group">
                           {isVideoUrl(sec.image1.src) ? (
-                            <video
+                            <SafariVideo
                               src={sec.image1.src}
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
                               className="w-full h-auto block"
                             />
                           ) : (
@@ -346,12 +335,8 @@ export default function ProjectDetailPage({
                       {sec.image2?.src ? (
                         <div className="w-full rounded-[12px] overflow-hidden bg-[#121212] relative group">
                           {isVideoUrl(sec.image2.src) ? (
-                            <video
+                            <SafariVideo
                               src={sec.image2.src}
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
                               className="w-full h-auto block"
                             />
                           ) : (
@@ -400,12 +385,8 @@ export default function ProjectDetailPage({
                     {/* Thumbnail: Full width on mobile, 160px width on tablet/desktop */}
                     <div className="w-full sm:w-[160px] aspect-[16/9] rounded-[8px] overflow-hidden bg-black shrink-0 border border-white/10">
                       {isVideoUrl(nextProject.thumbnail) ? (
-                        <video
+                        <SafariVideo
                           src={nextProject.thumbnail}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (

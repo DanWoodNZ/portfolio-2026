@@ -47,8 +47,34 @@ import Header from "@/components/Header";
 import { ViewModeProvider } from "@/context/ViewModeContext";
 
 export const metadata: Metadata = {
-  title: "DAN WOOD • LEAD PRODUCT DESIGNER",
+  metadataBase: new URL("https://www.danrwood.com"),
+  title: "Dan Wood: Lead Product Designer",
   description: "Lead Product Designer based in NYC. Portfolio & case studies.",
+  openGraph: {
+    title: "Dan Wood: Lead Product Designer",
+    description: "Lead Product Designer based in NYC. Portfolio & case studies.",
+    url: "https://www.danrwood.com",
+    siteName: "Dan Wood Portfolio",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/assets/photos/about-1.webp",
+        width: 1200,
+        height: 630,
+        alt: "Dan Wood: Lead Product Designer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dan Wood: Lead Product Designer",
+    description: "Lead Product Designer based in NYC. Portfolio & case studies.",
+    images: ["/assets/photos/about-1.webp"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

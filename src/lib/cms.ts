@@ -43,8 +43,8 @@ export const CDN_BASE_URL = (
   process.env.NEXT_PUBLIC_CDN_URL ||
   process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
   process.env.R2_PUBLIC_URL ||
-  "https://cdn.danrwood.com"
-).replace(/\/$/, "");
+  "https://media.danrwood.com"
+).replace(/\/+$/, "");
 
 // Normalize image and video paths so relative keys append directly to CDN base URL
 const normalizeImage = (src?: string) => {

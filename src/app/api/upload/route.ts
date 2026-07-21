@@ -16,8 +16,8 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_CDN_URL ||
       process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
       process.env.R2_PUBLIC_URL ||
-      ""
-    ).replace(/\/$/, "");
+      "https://media.danrwood.com"
+    ).replace(/\/+$/, "");
 
     // Determine media type
     const contentType = file.type || "application/octet-stream";
@@ -43,7 +43,8 @@ export async function POST(request: Request) {
         })
       );
 
-      const url = publicUrl ? `${publicUrl}/${key}` : `https://pub-xxxx.r2.dev/${key}`;
+      const cleanKey = key.replace(/^\/+/, "");
+      const url = `${publicUrl}/${cleanKey}`;
       return NextResponse.json({ success: true, url, type: mediaType, key });
     }
 
